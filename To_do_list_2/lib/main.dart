@@ -360,10 +360,81 @@ class _TodoListScreenState extends State<TodoListScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _navigateToNewTask,
-        tooltip: 'Add Task',
-        child: const Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Debug: Check permissions button
+          FloatingActionButton.small(
+            onPressed: () async {
+              final hasPermission = await NotificationService.checkAndRequestPermissions();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(hasPermission 
+                        ? 'Notifications enabled ✅' 
+                        : 'Notifications disabled ❌\nPlease enable in device Settings > Apps > To Do List 2 > Notifications'),
+                    duration: const Duration(seconds: 4),
+                  ),
+                );
+              }
+            },
+            tooltip: 'Check Permissions',
+            backgroundColor: Colors.green,
+            child: const Icon(Icons.security, size: 16),
+          ),
+          const SizedBox(height: 8),
+          // Debug: Simple test notification (for iOS simulator)
+          FloatingActionButton.small(
+            onPressed: () async {
+              await NotificationService.showSimpleTestNotification();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Simple notification sent!')),
+                );
+              }
+            },
+            tooltip: 'Simple Test',
+            backgroundColor: Colors.purple,
+            child: const Icon(Icons.star, size: 16),
+          ),
+          const SizedBox(height: 8),
+          // Debug: Test notification button (remove in production)
+          FloatingActionButton.small(
+            onPressed: () async {
+              await NotificationService.showTestNotification();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Test notification sent! Check notification center.')),
+                );
+              }
+            },
+            tooltip: 'Test Notification',
+            backgroundColor: Colors.orange,
+            child: const Icon(Icons.notifications_active, size: 16),
+          ),
+          const SizedBox(height: 8),
+          // Debug: Show pending notifications
+          FloatingActionButton.small(
+            onPressed: () async {
+              final pending = await NotificationService.getPendingNotifications();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Pending notifications: ${pending.length}')),
+                );
+              }
+            },
+            tooltip: 'Check Pending',
+            backgroundColor: Colors.blue,
+            child: const Icon(Icons.list, size: 16),
+          ),
+          const SizedBox(height: 8),
+          // Main add task button
+          FloatingActionButton(
+            onPressed: _navigateToNewTask,
+            tooltip: 'Add Task',
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }

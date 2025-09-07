@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:www.brahmakumaris.com)"
+      "WebFetch(domain:www.brahmakumaris.com)",
+      "Bash(flutter clean:*)",
+      "Bash(flutter pub:*)",
+      "Bash(pod install:*)",
+      "Bash(flutter build:*)"
     ],
     "deny": [],
     "ask": []
